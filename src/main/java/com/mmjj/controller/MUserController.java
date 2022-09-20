@@ -22,16 +22,16 @@ public class MUserController {
     @Autowired
     MUserService mUserService;
 
-//    @RequiresAuthentication
-    @GetMapping("/index")
-    public Result index(){
-        MUser user = mUserService.getById(1L);
-        return Result.success(user);
-    }
+////    @RequiresAuthentication
+//    @GetMapping("/index")
+//    public Result index(){
+//        MUser user = mUserService.getById(1L);
+//        return Result.success(user);
+//    }
 
-    @PostMapping("/save")
-    public Result save(@Validated @RequestBody MUser user){
-        return Result.success(user);
-    }
+//    @PostMapping("/save")
+//    public Result save(@Validated @RequestBody MUser user){
+//        return Result.success(user);
+//    }
 
 }

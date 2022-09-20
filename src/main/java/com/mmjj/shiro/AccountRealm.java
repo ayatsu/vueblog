@@ -26,13 +26,13 @@ public class AccountRealm extends AuthorizingRealm {
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        System.out.println("执行了授权");
+//        System.out.println("执行了授权");
         return null;
     }
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        System.out.println("执行了认证");
+//        System.out.println("执行了认证");
         JwtToken jwtToken = (JwtToken) token;
 
         String userId = jwtUtils.getClaimByToken((String) jwtToken.getPrincipal()).getSubject();
@@ -49,8 +49,6 @@ public class AccountRealm extends AuthorizingRealm {
         AccountProfile profile = new AccountProfile();
         BeanUtil.copyProperties(user, profile);
 
-        //
-        System.out.println(jwtToken.getCredentials());
         return new SimpleAuthenticationInfo(profile, jwtToken.getCredentials(), getName());
     }
 }

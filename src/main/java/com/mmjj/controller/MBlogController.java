@@ -36,7 +36,7 @@ public class MBlogController {
     MUserService userService;
 
 //    @RequiresAuthentication
-    @GetMapping("/blog")
+    @GetMapping("/blogs")
     public Result list(@RequestParam(defaultValue = "1") int currentPage){
         Page page = new Page(currentPage, 10);
         IPage pageData = blogService.page(page, new QueryWrapper<MBlog>().orderByDesc("created"));
@@ -44,6 +44,14 @@ public class MBlogController {
         return Result.success(pageData);
     }
 
+    @RequiresAuthentication
+    @GetMapping("/all")
+    public Result allList(){
+        Page page = new Page(1, 99999);
+        IPage pageData = blogService.page(page, new QueryWrapper<MBlog>().orderByDesc("created"));
+
+        return Result.success(pageData);
+    }
 
 
     @RequiresAuthentication
@@ -57,24 +65,29 @@ public class MBlogController {
 
 
 
-//    @RequiresAuthentication
+    @RequiresAuthentication
     @PostMapping("/blog/edit")
     public Result edit(@Validated @RequestBody MBlog blog) {
         MUser admin = userService.getById(1L);
         MBlog temp = null;
-        if(blog.getId() != null) {
-            temp = blogService.getById(blog.getId());
-            Assert.isTrue(temp.getUserId().longValue() == ShiroUtil.getProfile().getId().longValue(), "没有权限编辑");
-        } else {
-            temp = new MBlog();
-            temp.setUserId(ShiroUtil.getProfile().getId());
-            temp.setCreated(LocalDateTime.now());
-            temp.setStatus(0);
-            temp.setType(0);
+        if(admin.getId().longValue() == ShiroUtil.getProfile().getId().longValue()){
+            if(blog.getId() != null) {
+                temp = blogService.getById(blog.getId());
+            } else {
+                temp = new MBlog();
+                temp.setUserId(ShiroUtil.getProfile().getId());
+                temp.setCreated(LocalDateTime.now());
+                temp.setStatus(0);
+                temp.setType(0);
+            }
+            BeanUtil.copyProperties(blog, temp, "id", "userId", "created", "status", "type");
+            blogService.saveOrUpdate(temp);
+            return Result.success("操作成功");
+        }else{
+            return Result.fail("no authorization for visitor");
         }
-        BeanUtil.copyProperties(blog, temp, "id", "userId", "created", "status", "type");
-        blogService.saveOrUpdate(temp);
-        return Result.success("操作成功");
+
+
     }
 
 

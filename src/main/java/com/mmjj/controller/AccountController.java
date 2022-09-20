@@ -40,7 +40,7 @@ public class AccountController {
         }
         String jwt = jwtUtils.generateToken(user.getId());
 
-        System.out.println(jwt);//ok
+//        System.out.println(jwt);//ok
         response.setHeader("Authorization", jwt);
         response.setHeader("Access-control-Expose-Headers", "Authorization");
 
@@ -56,7 +56,7 @@ public class AccountController {
     @GetMapping("/logout")
     public Result logout() {
         SecurityUtils.getSubject().logout();
-        return Result.success(null);
+        return Result.success("success logout");
     }
 
 }
